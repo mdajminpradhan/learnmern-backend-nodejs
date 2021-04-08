@@ -3,10 +3,18 @@ const router = express.Router();
 const { check } = require('express-validator');
 const { isAdmin } = require('../../../learnbackend/controllers/auth');
 
-const { createAccount, signin, isSignedIn, getallusers, getuserbyid, updateuser, accountdelete } = require('../controllers/auth');
+const {
+	createAccount,
+	signin,
+	isSignedIn,
+	getallusers,
+	getuserbyid,
+	updateuser,
+	accountdelete
+} = require('../controllers/auth');
 
 // getting user by id
-router.param('userId', getuserbyid)
+router.param('userId', getuserbyid);
 
 // creating account
 router.post(
@@ -23,15 +31,13 @@ router.post(
 // signin user
 router.post('/signin', signin);
 
-
 // get all users
-router.get('/users', isSignedIn, getallusers)
+router.get('/users', isSignedIn, getallusers);
 
 // update user
-router.put('/updateuser/:userId', isSignedIn, updateuser)
-
+router.put('/updateuser/:userId', isSignedIn, updateuser);
 
 // deleting user
-router.delete('/account/delete/:userId', isSignedIn, accountdelete)
+router.delete('/account/delete/:userId', isSignedIn, accountdelete);
 
 module.exports = router;

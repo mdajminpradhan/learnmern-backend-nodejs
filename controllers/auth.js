@@ -3,21 +3,19 @@ const expressJWT = require('express-jwt');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 
-
 // getting  user by id
 exports.getuserbyid = (req, res, next, id) => {
 	User.findById(id).exec((error, user) => {
-		if(error){
+		if (error) {
 			return res.status(400).json({
-				error: "User not found"
-			})
+				error: 'User not found'
+			});
 		}
 
 		req.user = user;
-		next()
-	})
-}
-
+		next();
+	});
+};
 
 // creating account
 exports.createAccount = (req, res) => {
@@ -90,7 +88,7 @@ exports.signin = (req, res) => {
 exports.isSignedIn = expressJWT({
 	secret: process.env.SECRET,
 	userProperty: 'auth',
-	algorithms: ['sha1', 'RS256', 'HS256'],
+	algorithms: [ 'sha1', 'RS256', 'HS256' ]
 });
 
 exports.isAuthenticated = (req, res, next) => {
@@ -114,7 +112,7 @@ exports.isAdmin = (req, res, next) => {
 };
 
 exports.getallusers = (req, res) => {
-	User.find().sort([ [ 'sortBy', "asc" ] ]).exec((error, users) => {
+	User.find().sort([ [ 'sortBy', 'asc' ] ]).exec((error, users) => {
 		if (error) {
 			return res.status(400).json({
 				error: 'No documents found in the database'
@@ -125,45 +123,40 @@ exports.getallusers = (req, res) => {
 	});
 };
 
-
 exports.updateuser = (req, res) => {
+	console.log(req.user);
 
-	const errors = validationResult(req.body);
+	User.findOneAndUpdate(
+		{ _id: req.user._id },
+		{ $set: req.body },
+		{ new: true, useFindAndModify: false },
+		(error, user) => {
+			if (error) {
+				return res.status(400).json({
+					error: 'You are not authorized to update this user'
+				});
+			}
 
-	if(!errors.isEmpty()){
-		return res.status(400).json({
-			error: errors.array()[0].msg
-		})
-	}
-
-
-	const user = User(req.body);
-
-	user.save((error, user) => {
-		if(error){
-			return res.status(400).json({
-				error: "Something went wrong while updating the user", error
-			})
+			user.salt = undefined;
+			user.encrypted_password = undefined;
+			user.createdAt = undefined;
+			user.updatedAt = undefined;
+			res.json(user);
 		}
-
-		res.json(user)
-	})
-}
-
-
+	);
+};
 
 exports.accountdelete = (req, res) => {
-	
-	let user = req.user
-	console.log(req, user)
+	let user = req.user;
+	console.log(req, user);
 
 	user.remove((error, user) => {
-		if(error){
+		if (error) {
 			return res.status(400).json({
-				error: "User not found"
-			})
+				error: 'User not found'
+			});
 		}
 
 		res.json(user);
-	})
-}
+	});
+};
