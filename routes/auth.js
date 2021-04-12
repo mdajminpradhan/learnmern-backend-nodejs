@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { check } = require('express-validator');
-const { isAdmin } = require('../../../learnbackend/controllers/auth');
 
 const {
 	createAccount,
@@ -10,7 +9,9 @@ const {
 	getallusers,
 	getuserbyid,
 	updateuser,
-	accountdelete
+	accountdelete,
+	getUser,
+	isAuthenticated
 } = require('../controllers/auth');
 
 // getting user by id
@@ -33,6 +34,9 @@ router.post('/signin', signin);
 
 // get all users
 router.get('/users', isSignedIn, getallusers);
+
+// get user by id
+router.get('/user/:userId', isSignedIn, getUser);
 
 // update user
 router.put('/updateuser/:userId', isSignedIn, updateuser);

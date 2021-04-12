@@ -1,9 +1,9 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser')
 const app = express();
 
+const cookieParser = require('cookie-parser')
 const cors = require('cors');
 
 
@@ -18,13 +18,14 @@ mongoose
 .then(() => console.log('Database connected successfully'))
 .catch((error) => console.log('Database connection failed', error));
 
-// setting port
-const port = process.env.PORT || 5000;
-
 // middlewares
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors())
+
+
+// setting port
+const port = process.env.PORT || 5000;
 
 
 // brining all the routes

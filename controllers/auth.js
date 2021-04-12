@@ -111,6 +111,11 @@ exports.isAdmin = (req, res, next) => {
 	next();
 };
 
+exports.getUser = (req, res) => {
+	// req.user.encrypted_password = undefined;
+	return res.json(req.user);
+};
+
 exports.getallusers = (req, res) => {
 	User.find().sort([ [ 'sortBy', 'asc' ] ]).exec((error, users) => {
 		if (error) {
